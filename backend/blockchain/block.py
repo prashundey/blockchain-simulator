@@ -2,6 +2,7 @@ import time
 
 from backend.util.crypto_hash import crypto_hash
 from backend.config import MINE_RATE
+from backend.util.hex_to_binary import hex_to_binary
 
 """
 GLOBAL VARIABLES 
@@ -44,6 +45,9 @@ class Block:
         Mine a block until the block hash created using 
         previous block hash, current block data points and nonce
         statisfy the proof of work requirement
+
+        Hashing Success Based on Proof of Work Difficulty
+        - Leading Zeroes in Binary Representation not Hexidecimal 
         """
         timestamp = time.time_ns()
         last_hash = last_block.hash
@@ -51,7 +55,7 @@ class Block:
         nonce = 0
         hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
 
-        while hash[0:difficulty] != '0' * difficulty:
+        while hex_to_binary(hash)[0:difficulty] != '0' * difficulty:
             nonce += 1
             timestamp = time.time_ns()
             difficulty = Block.adjust_difficulty(last_block, timestamp);

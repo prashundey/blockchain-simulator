@@ -6,7 +6,7 @@ def crypto_hash(*args):
     Returns a sha-256 hash of all the given arguments, regardless of order
     """
     string_args = sorted(map(lambda data: json.dumps(data), args))
-    joined_string = ''.join(string_args)
+    joined_string = '^'.join(string_args)
     return hashlib.sha256(joined_string.encode('utf-8')).hexdigest()
 
 def main():
