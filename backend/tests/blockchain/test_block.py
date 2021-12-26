@@ -1,4 +1,7 @@
+import time
+
 from backend.blockchain.block import GENESIS_DATA, Block
+from backend.config import MINE_RATE, SECONDS
 
 def test_mine_block():
     '''
@@ -24,3 +27,48 @@ def test_genesis():
     
     for key, value in GENESIS_DATA.items():
         assert getattr(genesis, key) == value
+
+
+def test_mined_block_inc_difficulty(): 
+    '''
+    Test incrementing diffculty of mining block
+    '''
+    last_block = Block.mine_block(Block.genesis(), 'foo')
+    mined_block = Block.mine_block(last_block, '2-foo')
+
+    assert mined_block.difficulty == last_block.difficulty + 1
+
+
+def test_mined_block_dec_difficulty():
+    '''
+    Test decrementing difficulty of mining block 
+    by putting thread to sleep to replicate mine rate of current block > Accepted MINE RATE
+    '''
+    last_block = Block.mine_block(Block.genesis(), 'foo')
+
+    # Delay by 4 seconds, since Mine Rate is 4 seconds in nanoseconds
+    time.sleep(MINE_RATE / SECONDS)
+    mined_block = Block.mine_block(last_block, '2-foo')
+
+    assert mined_block.difficulty == last_block.difficulty - 1
+
+
+def test_mined_block_difficulty_limits_at_1():
+    '''
+    Test that the lowest difficulty will always be 1
+    by creating a hard coded block with a difficulty of 1 already and 
+    replicate mine rate of current block > Accepted MINE RATE to
+    to test if it will decrement
+    '''
+    last_block = Block(
+        time.time_ns(),
+        'test_last_hash',
+        'test_hash',
+        'foo',
+        1,
+        0
+    )
+    time.sleep(MINE_RATE / SECONDS)
+    mined_block = Block.mine_block(last_block, 'bar')
+
+    assert mined_block.difficulty == 1
