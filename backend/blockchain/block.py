@@ -5,7 +5,7 @@ from backend.config import MINE_RATE
 from backend.util.hex_to_binary import hex_to_binary
 
 """
-GLOBAL VARIABLES 
+Genesis Block Hardcoded Fields  
 """
 GENESIS_DATA = {
     'timestamp' : 1,
@@ -84,11 +84,44 @@ class Block:
 
         return 1;
 
+    @staticmethod
+    def is_valid_block(last_block, block): 
+        """
+        Validate block:
+            1. Block previous hash references correct hash of previous block 
+            2. Block must meet proof of work requirement
+            3. Difficulty in proof of work must differ by at most 1
+            4. Block hash must be valid hash based on combination of current data points
+                If regnerated hash does not match current hash, then data has been tampered with
+        """
+        if block.last_hash != last_block.hash:
+            raise Exception('Current Block last_hash is not correct')
+
+        if hex_to_binary(block.hash)[0:block.difficulty] != '0' * block.difficulty:
+            raise Exception('Proof of work requirement not statisfied')
+        
+        if abs(last_block.difficulty - block.difficulty) > 1:
+            raise Exception('Block difficulty must be adjusted by 1')
+
+        regenerated_hash = crypto_hash(
+            block.timestamp,
+            block.last_hash,
+            block.data,
+            block.difficulty,
+            block.nonce
+        )
+
+        if regenerated_hash != block.hash:
+            raise Exception('Block hash must be correct')
 
 def main():
-    genesis_block = Block.genesis();
-    block = Block.mine_block(genesis_block, 'a')
-    print(block)
+    genesis = Block.genesis()
+    bad_block = Block.mine_block(genesis, 'bad-block')
+    bad_block.data = 'bad-block-data-changed'
+    try:
+        Block.is_valid_block(genesis, bad_block)
+    except Exception as e: 
+        print(f'is_valid_block: {e}')
 
 if __name__ == '__main__':
     main()
