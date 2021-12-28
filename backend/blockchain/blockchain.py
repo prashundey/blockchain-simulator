@@ -57,7 +57,6 @@ class Blockchain:
             last_block = chain[i-1]
             Block.is_valid_block(last_block, block)
 
-    
 
 def main():
     blockchain = Blockchain()
