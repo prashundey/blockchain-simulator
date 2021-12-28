@@ -11,8 +11,6 @@ pip3 install -r requirements.txt
 ```
 
 **Run Tests**
-Requirements: Virtual Environment Activated
-
 ```
 python3 -m pytest backend/tests
 ```
@@ -20,4 +18,9 @@ python3 -m pytest backend/tests
 **Run API**
 ```
 python3 -m backend.app
+```
+
+**Run a PEER instance**
+```
+export PEER=True && python3 -m backend.app
 ```
