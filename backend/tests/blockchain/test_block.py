@@ -84,28 +84,23 @@ def last_block():
 def block(last_block):
     return Block.mine_block(last_block, 'test-data')
 
-
 def test_is_valid_block(last_block, block):
     Block.is_valid_block(last_block, block)
-    
 
 def test_is_valid_block_bad_last_hash(last_block, block):
     block.last_hash = 'incorrect-last-hash'
     with pytest.raises(Exception, match='Current Block last_hash is not correct'):
         Block.is_valid_block(last_block, block)
 
-
 def test_is_valid_block_bad_current_hash(last_block, block):
     block.data = 'incorrect-data'
     with pytest.raises(Exception, match='Block hash must be correct'):
         Block.is_valid_block(last_block, block)
 
-
 def test_is_valid_block_bad_proof_of_work(last_block, block):
     block.hash = 'fff'
     with pytest.raises(Exception, match='Proof of work requirement not statisfied'):
         Block.is_valid_block(last_block, block)
-
 
 def test_is_valid_block_adjust_difficulty(last_block, block):
     block.difficulty = 10
