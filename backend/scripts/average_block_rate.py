@@ -23,6 +23,6 @@ for i in range(1000):
 HexiDecimal Form Hashes:
     Average Mine Rate Converges to 2.5 seconds but MINE_RATE = 4 seconds
 
-    TODO: change hashes to Binary Representation, because mining leading zeros for 
+    Change hashes to Binary Representation, because mining leading zeros for 
     Hexidecimal hashes to easy to for CPU
 '''

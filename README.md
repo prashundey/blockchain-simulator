@@ -16,3 +16,8 @@ Requirements: Virtual Environment Activated
 ```
 python3 -m pytest backend/tests
 ```
+
+**Run API**
+```
+python3 -m backend.app
+```
