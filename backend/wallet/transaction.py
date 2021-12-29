@@ -28,7 +28,7 @@ class Transaction:
         }
         """
         if amount > sender_wallet.balance:
-            raise Exception('Amount exceeds sender balance')
+            raise Exception('Amount exceeds balance')
 
         output = {}
         output[recipient] = amount
@@ -51,6 +51,21 @@ class Transaction:
             'signature': sender_wallet.sign(output)
         }
 
+    def update(self, sender_wallet : Wallet, recipient_address, amount):
+        """
+        Update Transaction with existing or new recipient and sign new Transaction 
+        """
+        if amount > self.output[sender_wallet.address]:
+            raise Exception('Amount exceeds balance')
+        
+        if recipient_address in self.output:
+            self.output[recipient_address] = self.output[recipient_address] + amount
+        else:
+            self.output[recipient_address] = amount
+        
+        self.output[sender_wallet.address] = self.output[sender_wallet.address] - amount
+
+        self.input = self.create_input(sender_wallet, self.output)
 
 def main():
     transaction = Transaction(Wallet(), 'recipient-addy', 15)
