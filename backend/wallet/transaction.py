@@ -53,7 +53,7 @@ class Transaction:
 
     def update(self, sender_wallet : Wallet, recipient_address, amount):
         """
-        Update Transaction with existing or new recipient and sign new Transaction 
+        Update Transaction with existing or new recipient and resigns the Transaction 
         """
         if amount > self.output[sender_wallet.address]:
             raise Exception('Amount exceeds balance')
@@ -66,6 +66,12 @@ class Transaction:
         self.output[sender_wallet.address] = self.output[sender_wallet.address] - amount
 
         self.input = self.create_input(sender_wallet, self.output)
+
+    def to_json(self):
+        """
+        Serialize Transaction
+        """
+        return self.__dict__
 
     @staticmethod
     def is_valid_transaction(transaction):
