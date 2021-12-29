@@ -35,7 +35,7 @@ PORT = 5000
 '''
 Peer instances, startup
     1. Establish startup on different port: random between 5001 and 6000
-    2. Synchronize a Peer on startup to catch up with Block
+    2. Synchronize a Peer on startup to catch up with root node chain
 '''
 if os.environ.get('PEER') == 'True':
     PORT = random.randint(5001, 6000)
@@ -45,7 +45,8 @@ if os.environ.get('PEER') == 'True':
 
     try:
         blockchain.replace_chain(res_blockchain.chain)
-        print('\n --- Successfully synchronized local chain')
+        
     except Exception as e:
         print(f'Could not synchronize local chain: {e}')
+
 app.run(port = PORT)

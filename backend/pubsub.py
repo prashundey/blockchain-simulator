@@ -30,11 +30,11 @@ class Listener(SubscribeCallback):
         pass
 
     def presence(self, pubnub, presence):
-        pprint(presence.__dict__)
+        pprint.pprint(presence.__dict__)
 
     def message(self, pubnub, message):
         print(f'incoming message -- {message.channel} Channel')
-        print(message.message)
+        pprint.pprint(message.message)
 
         if message.channel == CHANNELS['BLOCK']:
             new_block = Block.from_json(message.message)

@@ -1,13 +1,16 @@
 aiohttp==3.8.1
 aiosignal==1.2.0
+asn1crypto==1.4.0
 async-timeout==4.0.2
 atomicwrites==1.4.0
 attrs==21.2.0
 cbor2==5.4.2
 certifi==2021.10.8
+cffi==1.15.0
 chardet==3.0.4
 charset-normalizer==2.0.9
 click==8.0.3
+cryptography==2.7
 Flask==1.1.1
 frozenlist==1.2.0
 idna==2.8
@@ -20,6 +23,7 @@ packaging==21.3
 pluggy==0.13.1
 pubnub==4.1.6
 py==1.11.0
+pycparser==2.21
 pycryptodomex==3.12.0
 pyparsing==3.0.6
 pytest==5.1.2
