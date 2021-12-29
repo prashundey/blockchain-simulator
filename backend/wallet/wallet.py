@@ -5,9 +5,12 @@ import json
 from backend.config import STARTING_BALANCE
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.utils import (
+    encode_dss_signature,
+    decode_dss_signature
+) 
 
 class Wallet:
     """
@@ -23,15 +26,20 @@ class Wallet:
 
         self.serialize_public_key()
 
-    def sign(self, data : any) -> bytes:
+    def sign(self, data : any) -> tuple:
         """
         Generate signature based on the data using local Private Key
-        Stringify and Encode input data utf-8
+            - Stringify and Encode input data utf-8
+            - Decoding using Digital signature standard (DSS)
+
+        @returns
+        Tuple of coordinates (r,s) on randomly generated Elliptic Curve 
+        that represents decoded signature 
         """
-        return self.private_key.sign(
+        return decode_dss_signature(self.private_key.sign(
             json.dumps(data).encode('utf-8'), 
             ec.ECDSA(hashes.SHA256())
-        )
+        ))
 
     def serialize_public_key(self):
         """
@@ -44,24 +52,30 @@ class Wallet:
             format = serialization.PublicFormat.SubjectPublicKeyInfo
         ).decode('utf-8')
 
+
     @staticmethod
     def verify(public_key : str, 
                 data : any, 
-                signature : bytes) -> bool:
+                signature : tuple) -> bool:
         """
         Verify signature based on the orginal public key and data input
-            - Public Key ipout as PEM encoded serialized string. 
+            - Public Key input as PEM encoded serialized string. 
                 It is deserialized back into its EllipticCurvePublicKey object 
                 by using provided serialization load PEM public key method
             - Data Input is encoded utf-8
+            - Signature Input is tuple of cooridnates on Elliptic Curve via Sign Method
         """ 
         deserialized_public_key = serialization.load_pem_public_key(
             public_key.encode('utf-8'),
             default_backend()
         )
+
+        # Coordinates on Elliptic Curve 
+        (r, s) = signature
+
         try:
             deserialized_public_key.verify(
-                signature, 
+                encode_dss_signature(r, s), 
                 json.dumps(data).encode('utf-8'), 
                 ec.ECDSA(hashes.SHA256())
             )
