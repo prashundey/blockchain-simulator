@@ -80,6 +80,13 @@ class Block:
         return Block(**GENESIS_DATA)
     
     @staticmethod
+    def from_json(block_json):
+        """
+        Deserialize a block's JSON into Block object 
+        """
+        return Block(**block_json)
+
+    @staticmethod
     def adjust_difficulty(last_block, new_timestamp) -> int:
         """
         Increment or Decrement based on mining time 
