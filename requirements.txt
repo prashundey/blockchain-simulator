@@ -5,11 +5,12 @@ atomicwrites==1.4.0
 attrs==21.2.0
 cbor2==5.4.2
 certifi==2021.10.8
+chardet==3.0.4
 charset-normalizer==2.0.9
 click==8.0.3
 Flask==1.1.1
 frozenlist==1.2.0
-idna==3.3
+idna==2.8
 itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
@@ -22,9 +23,9 @@ py==1.11.0
 pycryptodomex==3.12.0
 pyparsing==3.0.6
 pytest==5.1.2
-requests==2.26.0
+requests==2.22.0
 six==1.16.0
-urllib3==1.26.7
+urllib3==1.25.11
 wcwidth==0.2.5
 Werkzeug==2.0.2
 yarl==1.7.2
