@@ -30,9 +30,7 @@ def route_blockchain():
 
 @app.route('/blockchain/mine')
 def route_blockchain_mine():
-    transaction_data = 'stubbed-transaction-data'
-    blockchain.add_block(transaction_data)
-
+    blockchain.add_block(transaction_pool.transaction_data())
     new_block = blockchain.chain[-1]
     pubsub.broadcast_block(new_block)
     return jsonify(new_block.to_json())
@@ -49,7 +47,7 @@ def route_wallet_transact():
             transaction_data['recipient'], 
             transaction_data['amount']
         )
-        
+
     else:
         transaction = Transaction(
             wallet,

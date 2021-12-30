@@ -26,3 +26,13 @@ class TransactionPool:
         for transaction in self.transaction_map.values():
             if transaction.input['address'] == address:
                 return transaction
+
+    def transaction_data(self) -> list:
+        """
+        Returns:
+            list: Transactions in transaction pool represented in JSON serialized form
+        """
+        return list(map(
+                lambda transaction: transaction.to_json(), 
+                self.transaction_map.values()
+        ))
