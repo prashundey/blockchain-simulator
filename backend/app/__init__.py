@@ -8,14 +8,14 @@ from backend.blockchain.blockchain import Blockchain
 from backend.wallet import transaction_pool
 
 from backend.wallet.transaction import Transaction
-from backend.wallet.wallet import Wallet
 from backend.wallet.transaction_pool import TransactionPool
+from backend.wallet.wallet import Wallet
 from backend.pubsub import PubSub
 
 app = Flask(__name__)
 blockchain = Blockchain()
 wallet = Wallet()
-transaction_pool = TransactionPool() 
+transaction_pool = TransactionPool()
 pubsub = PubSub(blockchain, transaction_pool)
 
 @app.route('/')
@@ -33,6 +33,7 @@ def route_blockchain_mine():
     blockchain.add_block(transaction_pool.transaction_data())
     new_block = blockchain.chain[-1]
     pubsub.broadcast_block(new_block)
+    transaction_pool.clear_blockchain_transactions(blockchain)
     return jsonify(new_block.to_json())
 
 
