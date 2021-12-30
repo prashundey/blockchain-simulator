@@ -53,7 +53,6 @@ class Listener(SubscribeCallback):
                 print(f'\n --- Did not replace chain {e}')
 
         elif message.channel == CHANNELS["TRANSACTION"]:
-            print(f'\nincoming message-- {message.channel} Channel')
             transaction = Transaction.from_json(message.message)
             self.transaction_pool.set_transaction(transaction)
             print(f'\ set new transaction to the Local Transaction Pool')

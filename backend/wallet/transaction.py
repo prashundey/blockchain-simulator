@@ -41,11 +41,6 @@ class Transaction:
         Returns:
             dict: Map of recipient_address and sender_address as keys and 
                     settlement of sender's balances as keys
-
-                    {
-                        recipient_address: amount to be delivered,
-                        sender_address: amount to be delivered
-                    }
         """
         if amount > sender_wallet.balance:
             raise Exception('Amount exceeds balance')
@@ -87,7 +82,7 @@ class Transaction:
             raise Exception('Amount exceeds balance')
         
         if recipient_address in self.output:
-            self.output[recipient_address] = self.output[recipient_address] + amount
+            self.output[recipient_address] += amount
         else:
             self.output[recipient_address] = amount
         
@@ -114,7 +109,7 @@ class Transaction:
     @staticmethod
     def is_valid_transaction(transaction):
         """
-        Validate transation or Raise Exception for invalid ones
+        Validate transaction or Raise Exception for invalid ones
             1. Check if Output structure is valid:
                 Amounts should sum to original sender balance
             2. Verify the signature of transaction
