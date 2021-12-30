@@ -10,5 +10,8 @@ class TransactionPool:
     def set_transaction(self, transaction: Transaction):
         """
         Set a transaction in the transaction pool
+
+        Args:
+            transaction (Transaction): [description]
         """
         self.transaction_map[transaction.id] = transaction

@@ -15,10 +15,11 @@ from cryptography.hazmat.primitives.asymmetric.utils import (
 
 class Wallet:
     """
-    Individual Wallet for Miner
-    Tracks miner's balance
-    Conduct and Authorize Transactions
+    - Individual Wallet for Miner
+    - Tracks miner's balance
+    - Conduct and Authorize Transactions
     """
+
     def __init__(self) -> None:
         self.address = str(uuid.uuid4())[0:8]
         self.balance  = STARTING_BALANCE
@@ -29,13 +30,15 @@ class Wallet:
 
     def sign(self, data: any) -> tuple:
         """
-        Generate signature based on the data using local Private Key
-            - Stringify and Encode input data utf-8
-            - Decoding using Digital signature standard (DSS)
+         Generate signature based on the data using local Private Key
+            - Stringifies and Encodes input data utf-8
+            - Then decodes using Digital signature standard (DSS)
+        
+        Args:
+            data (any): Data to be signed
 
-        @returns
-        Tuple of coordinates (r,s) on randomly generated Elliptic Curve 
-        that represents decoded signature 
+        Returns:
+            tuple: Coordinates (r,s) on randomly generated Elliptic Curve that represents decoded signature 
         """
         return decode_dss_signature(self.private_key.sign(
             json.dumps(data).encode('utf-8'), 
@@ -58,12 +61,17 @@ class Wallet:
     def verify(public_key: str, data: any, signature: tuple) -> bool:
         """
         Verify signature based on the orginal public key and data input
-            - Public Key input as PEM encoded serialized string. 
-                It is deserialized back into its EllipticCurvePublicKey object 
-                by using provided serialization load PEM public key method
-            - Data Input is encoded utf-8
-            - Signature Input is tuple of cooridnates on Elliptic Curve via Sign Method
-        """ 
+            - It is deserialized back into its EllipticCurvePublicKey object by using provided serialization load PEM public key method
+            - Data parameter is encoded utf-8
+
+        Args:
+            public_key (str): Public Key input as PEM encoded serialized string
+            data (any): Data used for signature
+            signature (tuple): Signature as cooridnates on Elliptic Curve via Sign Method
+
+        Returns:
+            bool: True 
+        """
         deserialized_public_key = serialization.load_pem_public_key(
             public_key.encode('utf-8'),
             default_backend()
