@@ -3,6 +3,7 @@ import pprint
 import json
 
 from backend.config import STARTING_BALANCE
+
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes, serialization
@@ -26,7 +27,7 @@ class Wallet:
 
         self.serialize_public_key()
 
-    def sign(self, data : any) -> tuple:
+    def sign(self, data: any) -> tuple:
         """
         Generate signature based on the data using local Private Key
             - Stringify and Encode input data utf-8
@@ -54,9 +55,7 @@ class Wallet:
 
 
     @staticmethod
-    def verify(public_key : str, 
-                data : any, 
-                signature : tuple) -> bool:
+    def verify(public_key: str, data: any, signature: tuple) -> bool:
         """
         Verify signature based on the orginal public key and data input
             - Public Key input as PEM encoded serialized string. 
@@ -70,7 +69,7 @@ class Wallet:
             default_backend()
         )
 
-        # Coordinates on Elliptic Curve 
+        # Coordinates on Elliptic Curve that represent decoded signature
         (r, s) = signature
 
         try:
@@ -88,7 +87,7 @@ def main():
     wallet = Wallet()
     pprint.pprint(wallet.__dict__)
 
-    data = {'foo' : 'bar'}
+    data = {'foo': 'bar'}
     signature = wallet.sign(data)
     print(f'signature: {signature}')
 
