@@ -6,8 +6,6 @@ import requests
 from flask import Flask, jsonify, request
 
 from backend.blockchain.blockchain import Blockchain
-from backend.wallet import transaction_pool
-
 from backend.wallet.transaction import Transaction
 from backend.wallet.transaction_pool import TransactionPool
 from backend.wallet.wallet import Wallet
@@ -33,10 +31,15 @@ def route_blockchain():
 
 @app.route('/blockchain/mine')
 def route_blockchain_mine():
-    blockchain.add_block(transaction_pool.transaction_data())
+    transaction_data = transaction_pool.transaction_data()
+    transaction_data.append(Transaction.reward_transaction(wallet).to_json())
+
+    blockchain.add_block(transaction_data)
     new_block = blockchain.chain[-1]
     pubsub.broadcast_block(new_block)
+
     transaction_pool.clear_blockchain_transactions(blockchain)
+    
     return jsonify(new_block.to_json())
 
 
@@ -62,12 +65,14 @@ def route_wallet_transact():
     pubsub.broadcast_transaction(transaction)
     return jsonify(transaction.to_json())
 
+
 @app.route('/wallet/info')
 def route_wallet_info():
     return jsonify({
         'address': wallet.address,
         'balance': wallet.balance
     })
+
 
 # Root Node Port
 ROOT_PORT = 5000

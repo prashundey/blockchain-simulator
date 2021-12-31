@@ -27,11 +27,11 @@ print(f'start_blockchain: {start_blockchain}')
 
 recipient = Wallet().address
 
-post_wallet_transact_1 = post_wallet_transact(recipient, 37)
+post_wallet_transact_1 = post_wallet_transact(recipient, 70)
 print(f'\npost_wallet_transact_1: {post_wallet_transact_1}')
 
 time.sleep(1)
-post_wallet_transact_2 = post_wallet_transact(recipient, 13)
+post_wallet_transact_2 = post_wallet_transact(recipient, 50)
 print(f'\npost_wallet_transact_2: {post_wallet_transact_2}')
 
 
