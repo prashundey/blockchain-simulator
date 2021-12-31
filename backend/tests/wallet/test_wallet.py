@@ -1,7 +1,6 @@
-from backend.blockchain import blockchain
+
 from backend.blockchain.blockchain import Blockchain
 from backend.config import STARTING_BALANCE
-from backend.wallet import transaction
 from backend.wallet.transaction import Transaction
 from backend.wallet.wallet import Wallet
 

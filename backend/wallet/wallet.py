@@ -1,7 +1,6 @@
 import uuid
 import pprint
 import json
-from backend.blockchain.blockchain import Blockchain
 
 from backend.config import STARTING_BALANCE
 
@@ -96,7 +95,7 @@ class Wallet:
             return False
 
     @staticmethod
-    def calculate_balance(blockchain: Blockchain, address: str) -> float:
+    def calculate_balance(blockchain, address: str) -> float:
         """
         Calculate balance of given address using the history of the blockchain
             - Balance is summing the output values that are associated with that 

@@ -1,4 +1,3 @@
-import json
 import os
 import random
 import requests
@@ -39,7 +38,7 @@ def route_blockchain_mine():
     pubsub.broadcast_block(new_block)
 
     transaction_pool.clear_blockchain_transactions(blockchain)
-    
+
     return jsonify(new_block.to_json())
 
 

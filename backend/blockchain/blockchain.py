@@ -1,11 +1,11 @@
 from backend.blockchain.block import Block
-from backend.tests.blockchain.test_block import block
+from backend.config import MINING_REWARD_INPUT
+from backend.wallet.transaction import Transaction
 
 
 class Blockchain: 
     """
     Blockchain: Public ledger of transactions
-    Implmentation: List of blocks (set of transactions)
     """
     def __init__(self) -> None:
         self.chain = [Block.genesis()]
@@ -16,13 +16,17 @@ class Blockchain:
     def __repr__(self) -> str:
         return f'Blockchain: {self.chain}'
 
-    def replace_chain(self, incoming_chain : list):
+    def replace_chain(self, incoming_chain: list):
         """
-        :type: list of Blocks
-
         Replace the local chain with incoming chain if it meets the following
             1. Incoming chain is longer than the local
             2. Incoming chain is formatted correctly
+        
+        Args:
+            incoming_chain (list of Blocks)
+
+        Raises:
+            Exception: If incoming chain is not longer or incoming chain itself is invalid
         """
         if (len(incoming_chain) <= len(self.chain)):
             raise Exception('Cannot Replace: incoming chain must be longer')
@@ -36,26 +40,9 @@ class Blockchain:
 
     def to_json(self) -> list:
         """
-        Serialize the blockchain into list of blocks which are also serialized 
+        Serialize the blockchain into list of blocks which are each serialized themsleves
         """
         return list(map(lambda block: block.to_json(), self.chain))
-
-    @staticmethod
-    def is_valid_chain(chain : list):
-        """
-        :type: list of Blocks
-
-        Validate incoming chain based on blockchain rules
-            1. Chain should start with genesis block
-            2. Blocks themselves must statify block validation rules
-        """
-        if chain[0] != Block.genesis():
-            raise Exception('Genesis Block must be valid')
-
-        for i in range(1, len(chain)):
-            block = chain[i]
-            last_block = chain[i-1]
-            Block.is_valid_block(last_block, block)
 
     @staticmethod
     def from_json(chain_json):
@@ -68,6 +55,63 @@ class Blockchain:
             map(lambda block_json: Block.from_json(block_json), chain_json)
         )
         return blockchain
+
+    @staticmethod
+    def is_valid_chain(chain: list):
+        """
+        Validate incoming chain based on blockchain rules
+            1. Chain should start with genesis block
+            2. Blocks themselves must statify block validation rules
+
+        Args:
+            chain (list of Blocks)
+
+        Raises:
+            Exception: If genesis block is invalid or any block in the chain is not valid
+        """
+        if chain[0] != Block.genesis():
+            raise Exception('Genesis Block must be valid')
+
+        for i in range(1, len(chain)):
+            block = chain[i]
+            last_block = chain[i-1]
+            Block.is_valid_block(last_block, block)
+
+    @staticmethod
+    def is_valid_transaction_chain(chain: list):
+        """
+        Validate rules of a blockchain composed of blocks of transactions
+            - Each transaction is unique and appears once in the chain
+            - Only a single mine reawrd transaction per block
+            - Each transaction must be valid themselves
+        Args:
+            chain (list of blocks): [description]
+        """
+
+        transaction_ids = set()
+
+        for block in chain:
+            has_mining_reward = False
+            
+            for transaction_json in block.data:
+                transaction = Transaction.from_json(transaction_json)
+
+                if transaction.input == MINING_REWARD_INPUT:
+                    if has_mining_reward:
+                        raise Exception(
+                            'There must be one mining reward per block'
+                            f'Check Block with hash: {block.hash} '
+                            )
+                    has_mining_reward = True
+                
+                if transaction.id in transaction_ids:
+                    raise Exception(f'Transaction {transaction.id} is not unique')
+                
+                Transaction.is_valid_transaction(transaction)
+                transaction_ids.add(transaction.id)
+               
+                
+
 
 def main():
     blockchain = Blockchain()
