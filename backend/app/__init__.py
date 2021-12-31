@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import requests
@@ -13,9 +14,11 @@ from backend.wallet.wallet import Wallet
 from backend.pubsub import PubSub
 
 app = Flask(__name__)
+
 blockchain = Blockchain()
-wallet = Wallet()
+wallet = Wallet(blockchain)
 transaction_pool = TransactionPool()
+
 pubsub = PubSub(blockchain, transaction_pool)
 
 @app.route('/')
@@ -59,6 +62,12 @@ def route_wallet_transact():
     pubsub.broadcast_transaction(transaction)
     return jsonify(transaction.to_json())
 
+@app.route('/wallet/info')
+def route_wallet_info():
+    return jsonify({
+        'address': wallet.address,
+        'balance': wallet.balance
+    })
 
 # Root Node Port
 ROOT_PORT = 5000

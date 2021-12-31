@@ -6,6 +6,20 @@ from backend.wallet.wallet import Wallet
 class Transaction:
     """
     Document of exchange of currency from a sender to one or more recipients
+
+    Dictionary Outline
+        - output: {
+            {recipient address}: amount to be paid
+            {sender wallet address}: amount to be settled back into sender
+        }
+
+        - input: {
+            'timestamp': timestamp epoch ns,
+            'amount': {sender wallet balance},
+            'address': {sender wallet address},
+            'public_key': {sender wallet public key}
+            'signature': {signature tuple of sender wallet signing output dict}
+        }
     """
     def __init__(
         self, 
@@ -25,22 +39,22 @@ class Transaction:
         )
         self.input = input or self.create_input(sender_wallet, self.output)
 
-    def create_output(self, sender_wallet: Wallet, recipient, amount) -> dict:
+    def create_output(self, sender_wallet: Wallet, recipient, amount: float) -> dict:
         """ 
         Structures output data for the transaction
             - Change of Transaction
-
+            - sender orginal balance = amount to be paid to recipient + amount to be settled back into sender
+        
         Args:
             sender_wallet (Wallet): Sender's Wallet 
             recipient ([type]): Recipient's Digital Address
-            amount ([type]): Amount of curreny to be Sent
+            amount ([float]): Amount of curreny to be Sent
 
         Raises:
             Exception: Amount exceeds balance
 
         Returns:
-            dict: Map of recipient_address and sender_address as keys and 
-                    settlement of sender's balances as keys
+            dict: Map of recipient_address and sender_address as keys and settlement of sender's balances as keys
         """
         if amount > sender_wallet.balance:
             raise Exception('Amount exceeds balance')
@@ -74,7 +88,7 @@ class Transaction:
             'signature': sender_wallet.sign(output)
         }
 
-    def update(self, sender_wallet: Wallet, recipient_address, amount):
+    def update(self, sender_wallet: Wallet, recipient_address, amount: float):
         """
         Update Transaction with existing or new recipient and resigns the Transaction 
         """

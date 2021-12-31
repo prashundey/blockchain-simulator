@@ -1,6 +1,7 @@
 import uuid
 import pprint
 import json
+from backend.blockchain.blockchain import Blockchain
 
 from backend.config import STARTING_BALANCE
 
@@ -11,7 +12,7 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.utils import (
     encode_dss_signature,
     decode_dss_signature
-) 
+)
 
 class Wallet:
     """
@@ -20,13 +21,17 @@ class Wallet:
     - Conduct and Authorize Transactions
     """
 
-    def __init__(self) -> None:
+    def __init__(self, blockchain = None) -> None:
+        self.blockchain = blockchain
         self.address = str(uuid.uuid4())[0:8]
-        self.balance  = STARTING_BALANCE
         self.private_key = ec.generate_private_key(ec.SECP256K1(), default_backend())
         self.public_key = self.private_key.public_key()
 
         self.serialize_public_key()
+
+    @property
+    def balance(self):
+        return Wallet.calculate_balance(self.blockchain, self.address)
 
     def sign(self, data: any) -> tuple:
         """
@@ -89,6 +94,39 @@ class Wallet:
             return True
         except InvalidSignature:
             return False
+
+    @staticmethod
+    def calculate_balance(blockchain: Blockchain, address: str) -> float:
+        """
+        Calculate balance of given address using the history of the blockchain
+            - Balance is summing the output values that are associated with that 
+            address throughout the chain
+
+        Args:
+            blockchain (Blockchain): Blockchain to iterate
+            address (str): Target Address to calculate balance
+        
+        Returns:
+            float: Current balance of wallet
+        """
+        balance = STARTING_BALANCE
+
+        if not blockchain:
+            return balance
+
+        for block in blockchain.chain:
+            for transaction in block.data:
+                #CASE 1: current address is sender
+                if transaction['input']['address'] == address:
+                    # Balance is reset to settlement of funds for the sender because output dict,
+                    # represents how the sender's balance was split for this transaction
+                    balance = transaction['output'][address]
+                
+                #CASE 2: current address is recipient
+                elif address in transaction['output']:
+                    balance += transaction['output'][address]
+        return balance
+
 
 
 def main():
