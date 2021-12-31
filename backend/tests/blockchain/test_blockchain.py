@@ -3,6 +3,7 @@ import pytest
 from backend.blockchain.blockchain import Blockchain
 from backend.blockchain.block import GENESIS_DATA
 from backend.wallet import transaction
+from backend.wallet import wallet
 from backend.wallet.wallet import Wallet
 from backend.wallet.transaction import Transaction
 
@@ -87,4 +88,18 @@ def test_invalid_transaction_chain_bad_transactions(blockchain_4_blocks: Blockch
     blockchain_4_blocks.add_block([transaction.to_json()])
 
     with pytest.raises(Exception):
+        Blockchain.is_valid_transaction_chain(blockchain_4_blocks.chain)
+
+
+
+def test_is_valid_transaction_chain_bad_historic_balance(blockchain_4_blocks: Blockchain):
+    wallet = Wallet()
+    bad_Transaction = Transaction(wallet, 'test-address', 50)
+    bad_Transaction.output[wallet.address] = 100000
+    bad_Transaction.input['amount'] = 100050
+    bad_Transaction.input['signature'] = wallet.sign(bad_Transaction.output)
+
+    blockchain_4_blocks.add_block([bad_Transaction.to_json()])
+
+    with pytest.raises(Exception, match='has invalid input amount'):
         Blockchain.is_valid_transaction_chain(blockchain_4_blocks.chain)
