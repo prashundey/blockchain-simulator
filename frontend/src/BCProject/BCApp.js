@@ -15,7 +15,7 @@ function BCApp() {
 
     return (
       <div className="App">
-        <h1>Blockchain Stimulator Project</h1>
+        <h1>Blockchain Project</h1>
         <br />
         <div className="WalletInfo">
           <div>Address: {address}</div>
