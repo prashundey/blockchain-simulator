@@ -15,12 +15,12 @@ pip3 install -r requirements.txt
 python3 -m pytest backend/tests
 ```
 
-**Run API**
+**Run Root Instance API**
 ```
 python3 -m backend.app
 ```
 
-**Run a PEER instance**
+**Run a PEER Instance API**
 ```
 export PEER=True && python3 -m backend.app
 ```
