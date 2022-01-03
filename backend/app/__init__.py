@@ -77,6 +77,11 @@ def route_wallet_info():
     })
 
 
+
+'''
+----------------------- BACKEND STARTUP -----------------------
+'''
+
 # Root Node Port
 ROOT_PORT = 5000
 PORT = 5000
@@ -96,5 +101,17 @@ if os.environ.get('PEER') == 'True':
     except Exception as e:
         print(f'Could not synchronize local chain: {e}')
 
+'''
+Seed Data for Front End Development
+    - Create blockchain with 10 blocks each with 2 transactions
+    - Transactions are between newly created wallets seperate from 
+    local running instance wallet
+'''
+if os.environ.get('SEED_DATA') == 'True':
+    for i in range(10):
+        blockchain.add_block([
+            Transaction(Wallet(), Wallet().address, random.randint(2,50)).to_json(),
+            Transaction(Wallet(), Wallet().address, random.randint(2,50)).to_json(),
+        ])
 
 app.run(port = PORT)

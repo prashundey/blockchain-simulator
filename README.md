@@ -24,3 +24,8 @@ python3 -m backend.app
 ```
 export PEER=True && python3 -m backend.app
 ```
+
+**Run Instance with Seeded Data**
+```
+export SEED_DATA=True && python3 -m backend.app
+```
