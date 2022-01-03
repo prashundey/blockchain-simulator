@@ -9,7 +9,7 @@ function Transaction({ transaction }) {
         <div>From: {input.address}</div>
             {
                 recipients.map(recipient => (
-                    <div key={recipient}> To:{recipient} | Sent: {output[recipient]} </div>
+                    <div key={recipient}> To: {recipient} | Sent: {output[recipient]} </div>
                 ))
             }
       </div>
