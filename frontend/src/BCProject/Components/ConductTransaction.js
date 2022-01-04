@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { FormGroup, FormControl, Button } from 'react-bootstrap'
 import { API_BASE_LOCAL_URL } from '../config'
+import history from '../history'
 
 function CondcutTransaction() {
     const [amount, setAmount] = useState(0)
@@ -30,7 +31,8 @@ function CondcutTransaction() {
         }).then(response => {
             let json = response.json()
             console.log('submitTransaction', json)
-            alert('Success')
+            alert('Success. Directing to Transaction Channel')
+            history.push('/transaction-pool')
         })
     }
 
