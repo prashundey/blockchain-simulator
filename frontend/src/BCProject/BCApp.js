@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { API_BASE_LOCAL_URL } from "./config";
-import Blockchain from "./Components/Blockchain";
-import CondcutTransaction from "./Components/ConductTransaction";
 
 function BCApp() {
   const [walletInfo, setWalletInfo] = useState({});
@@ -17,15 +16,14 @@ function BCApp() {
   return (
     <div className="App">
       <h1>Blockchain Project</h1>
-      <br />
+      <br/>
+      <Link to='/blockchain'>Blockchain</Link>
+      <Link to='conduct-transaction'>Conduct Transaction</Link>
+      <br/>
       <div className="WalletInfo">
         <div>Address: {address}</div>
         <div>Balance: {balance}</div>
       </div>
-      <br />
-      <Blockchain />
-      <br/>
-      <CondcutTransaction />
     </div>
   );
 }

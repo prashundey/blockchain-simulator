@@ -4,7 +4,6 @@ import BCApp from './BCProject/BCApp';
 function App() {
   return (
     <div className="App">
-      <BCApp/>
     </div>
   );
 }
