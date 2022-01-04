@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import {Router, Switch, Route} from 'react-router-dom'
 import {createBrowserHistory} from 'history'
 import BCApp from './BCProject/BCApp';

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { FormGroup, FormControl, Button } from 'react-bootstrap'
 import { API_BASE_LOCAL_URL } from '../config'
@@ -6,6 +6,13 @@ import { API_BASE_LOCAL_URL } from '../config'
 function CondcutTransaction() {
     const [amount, setAmount] = useState(0)
     const [recipient, setRecipient] = useState('')
+    const [addresses, setAddresses] = useState([])
+
+    useEffect(() => {
+        fetch(`${API_BASE_LOCAL_URL}/known-addresses`)
+            .then(response => response.json())
+            .then(json => setAddresses(json))
+    }, [])
 
     const updateRecipient = event => {
         setRecipient(event.target.value)
@@ -26,7 +33,8 @@ function CondcutTransaction() {
             alert('Success')
         })
     }
-
+    console.log('hello')
+    console.log(addresses)
     return (
         <div className='ConductTransaction'>
             <Link to='/'>Home</Link>
@@ -41,7 +49,6 @@ function CondcutTransaction() {
                     onChange={updateRecipient}
                 />
             </FormGroup>
-
             <FormGroup>
                 <FormControl
                     input='text'
@@ -50,7 +57,6 @@ function CondcutTransaction() {
                     onChange={updateAmount}
                 />
             </FormGroup>
-
             <div>
                 <Button
                     variant='danger'
@@ -58,6 +64,17 @@ function CondcutTransaction() {
                 >
                     Send
                 </Button>
+            </div>
+            <br/>
+            <h4>Addresses on Network</h4>
+            <div>
+                {
+                    addresses.map((address, i) => (
+                        <span key={address}>
+                            <u> {address} </u> {i !== addresses.length - 1 ? ' | ' : ''} 
+                        </span>
+                    ))
+                }
             </div>
         </div>
     )
