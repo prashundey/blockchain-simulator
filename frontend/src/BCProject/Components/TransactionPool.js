@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import Transaction from './Transaction'
 import { API_BASE_LOCAL_URL } from '../config'
 import { SECONDS_JS } from '../config'
+import { Button } from 'react-bootstrap'
+import history from '../history'
 
 const SHORT_PULLING_INTERVAL = 10 * SECONDS_JS
 
@@ -24,6 +26,20 @@ function TransactionPool() {
         return () => clearInterval(intervalID)
     }, [])
 
+    const fetchMineBlock = () => {
+        if (transactions.length === 0) {
+            alert('No transactions to mine')
+            history.push('/conduct-transaction')
+            return
+        }
+        
+        fetch(`${API_BASE_LOCAL_URL}/blockchain/mine`)
+            .then(() => {
+                alert('Succesfully Mined New Block')
+                history.push('/blockchain')
+            })
+    }
+
     return (
         <div className='TransactionPool'>
              <Link to='/'>Home</Link>
@@ -39,6 +55,15 @@ function TransactionPool() {
                 
                 }
              </div>
+
+             <br/>
+             <hr/>
+             <Button
+                variant='danger'
+                onClick={fetchMineBlock}
+             >
+                Mine Transactions
+            </Button>
         </div>
     )
 }
