@@ -89,6 +89,16 @@ def route_wallet_info():
     })
 
 
+@app.route('/known-addresses')
+def route_known_addresses():
+    addresses = set()
+    
+    for block in blockchain.chain:
+        for transaction in block.data:
+            addresses.update(transaction['output'].keys())
+
+    return jsonify(list(addresses))
+
 
 '''
 ----------------------- BACKEND STARTUP -----------------------
