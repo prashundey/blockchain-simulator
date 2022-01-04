@@ -19,6 +19,7 @@ function BCApp() {
       <br/>
       <Link to='/blockchain'>Blockchain</Link>
       <Link to='conduct-transaction'>Conduct Transaction</Link>
+      <Link to='transaction-pool'>Transaction Pool</Link>
       <br/>
       <div className="WalletInfo">
         <div>Address: {address}</div>

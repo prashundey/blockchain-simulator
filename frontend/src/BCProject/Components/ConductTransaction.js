@@ -33,14 +33,14 @@ function CondcutTransaction() {
             alert('Success')
         })
     }
-    console.log('hello')
-    console.log(addresses)
+
     return (
         <div className='ConductTransaction'>
             <Link to='/'>Home</Link>
             <br/>
             <h3>Conduct a Transaction</h3>
             <br/>
+
             <FormGroup>
                 <FormControl 
                     input='text'
@@ -65,8 +65,10 @@ function CondcutTransaction() {
                     Send
                 </Button>
             </div>
+
             <br/>
             <h4>Addresses on Network</h4>
+
             <div>
                 {
                     addresses.map((address, i) => (
